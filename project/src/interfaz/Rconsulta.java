@@ -1,49 +1,26 @@
 package interfaz;
 
+import com.toedter.calendar.JDateChooser;
+import conexion.ConexionSql;
+import util.Constantes;
+
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.EventQueue;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.border.LineBorder;
-
-import conexion.ConexionSql;
-
-import java.awt.Color;
-import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import java.awt.Dimension;
-
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.swing.DefaultComboBoxModel;
-
-import com.toedter.calendar.JDateChooser;
-import util.Constantes;
 
 public class Rconsulta extends JInternalFrame  {
 	
