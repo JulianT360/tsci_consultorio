@@ -21,9 +21,8 @@ import com.itextpdf.text.Rectangle;
 import conexion.ConexionSql;
 import generapdf.Genpdf_v;
 
-import static interfaz.InicioSesion.apm;
-import static interfaz.InicioSesion.app;
-import static interfaz.InicioSesion.nom;
+import static interfaz.InicioSesion.usuarioMedico;
+import static interfaz.InicioSesion.usuarioPersona;
 
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -473,7 +472,7 @@ public class RecetaMedica extends JInternalFrame {
                         
 				area.append("                                                               CONSULTORIO MEDICO GENERAL MIGUEL                                                  \n");
 				area.append("\n");
-				area.append("                                                              "+"DR."+nom+" "+app+" "+apm+"  ");area.append("                          "+"Fecha: "+c.get(c.DAY_OF_MONTH)+"/"+c.get(c.MONTH)+"/"+c.get(c.YEAR)+"\n");    
+				area.append("                                                              "+"DR."+ usuarioPersona.toString() + "  ");area.append("                          "+"Fecha: "+c.get(c.DAY_OF_MONTH)+"/"+c.get(c.MONTH)+"/"+c.get(c.YEAR)+"\n");
 				area.append("                                                  "+"Direccion: Edison Nte. Numero 218 Colonia Tracalosa de Monterrey ");
 				area.append("\n");
 				area.append("\n--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
