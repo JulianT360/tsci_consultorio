@@ -10,7 +10,8 @@ public enum MedicoRepository {
     saveMedico("INSERT INTO Medico (cedula, especialidad, categoria,"
             + "usuario, password, personaId) VALUES (?,?,?,?,?,?)"),
     updateMedico("UPDATE Persona SET cedula=?, especialidad=?, categoria=?," +
-            "usuario=?, password=?, personaId=? where id=?");;
+            "usuario=?, password=?, personaId=? where id=?"),
+    deleteMedico("DELETE FROM Medico WHERE id=?");
 
     private final String query;
 

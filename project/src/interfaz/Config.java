@@ -29,7 +29,7 @@ public class Config extends JInternalFrame {
 	JComboBox comboBox = new JComboBox();
 	JComboBox comboBox_catego = new JComboBox();
 	JTextField txt_cedula = new JTextField();
-	JTextField contraseña = new JTextField();
+	JTextField contrasena = new JTextField();
 	JButton btnEliminar = new JButton("Eliminar");
 	JButton btnLimpiar = new JButton("limpiar");
 	JButton btnGuardar = new JButton("Guardar");
@@ -233,13 +233,13 @@ public class Config extends JInternalFrame {
 		lbl_Contraseña.setBounds(602, 296, 220, 14);
 		panel.add(lbl_Contraseña);
 		
-		contraseña = new JTextField();
-		contraseña.setHorizontalAlignment(SwingConstants.CENTER);
-		contraseña.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		contraseña.setColumns(10);
-		contraseña.setBounds(602, 320, 220, 20);
-		contraseña.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getPassword());
-		panel.add(contraseña);
+		contrasena = new JTextField();
+		contrasena.setHorizontalAlignment(SwingConstants.CENTER);
+		contrasena.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		contrasena.setColumns(10);
+		contrasena.setBounds(602, 320, 220, 20);
+		contrasena.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getPassword());
+		panel.add(contrasena);
 		
 		JLabel lblCategoria = new JLabel("Categoria");
 		lblCategoria.setHorizontalAlignment(SwingConstants.CENTER);
@@ -266,7 +266,6 @@ public class Config extends JInternalFrame {
 		
 		comboBox_catego.setSelectedItem(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getCategoria());
 		panel.add(comboBox_catego);
-
 		
 		JLabel label = new JLabel("");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -365,7 +364,7 @@ public class Config extends JInternalFrame {
 		 txt_esp.setText("");
 		 txt_cedula.setText("");
 		 txt_usuario.setText("");
-		 contraseña.setText("");
+		 contrasena.setText("");
 		 comboBox.setSelectedIndex(0);
    } 
    
@@ -385,7 +384,7 @@ public class Config extends JInternalFrame {
 		medico.setEspecialidad(txt_esp.getText());
 		medico.setCategoria((String) comboBox_catego.getSelectedItem());
 		medico.setUsuario(txt_usuario.getText());
-		medico.setPassword(contraseña.getText());
+		medico.setPassword(contrasena.getText());
 		medico.setIdPersona(idPersona);
 
 		Long idMedico = medicoService.saveMedico(medico);
@@ -397,47 +396,57 @@ public class Config extends JInternalFrame {
     }
     
     public void editar() {
-    	/*
-    	String nom,ap,am,esp,cedula,sexo,categoria,user,pass;
-		String sql;
-				
-		nom=txt_Nombre.getText();
-		ap=txt_AP.getText();
-		am=txt_AM.getText();
-		cedula=txt_cedula.getText();
-		esp=txt_esp.getText();
-		user=txt_usuario.getText();
-		pass=contraseña.getText();
-		sexo=(String) comboBox.getSelectedItem();
-		categoria=(String) comboBox_catego.getSelectedItem();
-		
-		try {
-			PreparedStatement pps= reg.prepareStatement("UPDATE config SET Nombre_config='"+nom+
-                    "',Ap_config='"+ap+"',A_Materno_config='"+am+"',Sexo_config='"
-                    +sexo+"',Esp_config='"+esp+"',Usuario_config='" +user+"',Contraseña_config='"+pass+"' WHERE Cedula_config='"+cedula+ "'");
-			
-			pps.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Datos actualizados");
-			
+
+    	// Obtenemos el nombre del usuario
+    	String usuario = txt_usuario.getText().trim();
+
+    	try {
+			Medico medico = medicoService.getMedicoByUsuario(usuario);
+			if (Objects.isNull(medico)) {
+				throw new Exception("No se encontró el usuario");
+			}
+
+			Persona persona = personaService.getPersonaById(medico.getIdPersona());
+
+			// Se guardan los datos actualizados de la persona
+			persona.setNombre(txt_Nombre.getText());
+			persona.setApPaterno(txt_AP.getText());
+			persona.setApMaterno(txt_AM.getText());
+			persona.setSexo((String) comboBox.getSelectedItem());
+
+			// Se guardan los datos modificados del medico
+			medico.setCedula(txt_cedula.getText());
+			medico.setEspecialidad(txt_esp.getText());
+			medico.setCategoria((String)comboBox_catego.getSelectedItem());
+			medico.setUsuario(txt_usuario.getText());
+			medico.setPassword(contrasena.getText());
+
+			personaService.updatePersona(persona);
+			medicoService.updateMedico(medico);
+
+			JOptionPane.showMessageDialog(null, "Datos actualizados");
 		} catch (Exception e) {
-			Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, e);
+			e.printStackTrace();
 		}
-   		*/
-
-
     }
     
     public void eliminar() {
-    	String cedula=txt_cedula.getText();
+    	String usuario = txt_usuario.getText();
     	try {
-    		PreparedStatement pps =reg.prepareStatement("DELETE FROM config WHERE Cedula_config='"+cedula+"'");
-            pps.executeUpdate();
+			Medico medico = medicoService.getMedicoByUsuario(usuario);
+			if (Objects.isNull(medico)) {
+				throw new Exception("No se encontró el usuario");
+			}
+    		Persona persona = personaService.getPersonaById(medico.getIdPersona());
+
+			medicoService.delete(medico.getId());
+			personaService.deletePersona(persona.getId());
+
             JOptionPane.showMessageDialog(null,"Dato Eliminado");
 			
 		} catch (Exception e) {
-			Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, e);
+			e.printStackTrace();
 		}
-    	
     }
 
 	

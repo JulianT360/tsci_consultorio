@@ -62,6 +62,40 @@ public class MedicoService {
         return idMedico;
     }
 
+    public void updateMedico(Medico medico) {
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(MedicoRepository.updateMedico.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, medico.getCedula());
+            stmt.setString(2, medico.getEspecialidad());
+            stmt.setString(3, medico.getCategoria());
+            stmt.setString(4, medico.getUsuario());
+            stmt.setString(5, medico.getPassword());
+            stmt.setLong(6, medico.getIdPersona());
+            stmt.setLong(7, medico.getId());
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de medico");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void delete(Long idMedico) {
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(MedicoRepository.deleteMedico.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setLong(1, idMedico);
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de persona");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     /**
      * Prepara los resultados de la consulta de personas
      * @param rs

@@ -91,6 +91,38 @@ public class PersonaService {
         return idPersona;
     }
 
+    public void updatePersona(Persona persona) {
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(PersonaRepository.updatePersona.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, persona.getNombre());
+            stmt.setString(2, persona.getApPaterno());
+            stmt.setString(3, persona.getApMaterno());
+            stmt.setString(4, persona.getSexo());
+            stmt.setLong(5, persona.getId());
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de persona");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public void deletePersona(Long idPersona) {
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(PersonaRepository.delete.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setLong(1, idPersona);
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de persona");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
     /**
      * Prepara los resultados de la consulta de personas
      * @param rs
