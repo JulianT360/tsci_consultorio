@@ -1,47 +1,22 @@
 package interfaz;
 
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Rectangle;
-
-import conexion.ConexionSql;
+import com.itextpdf.text.*;
+import conexion.*;
 import generapdf.Genpdf_v;
 
-import static interfaz.InicioSesion.usuarioMedico;
-import static interfaz.InicioSesion.usuarioPersona;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.Font;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.sql.*;
+import java.util.*;
+import java.util.logging.*;
 
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import javax.swing.JComboBox;
-import javax.swing.JRadioButton;
+import static interfaz.InicioSesion.usuarioPersona;
 
 public class RecetaMedica extends JInternalFrame {
 
@@ -516,7 +491,7 @@ public class RecetaMedica extends JInternalFrame {
 			area.append("\n");
 			area.append("-----------------------------------------");
 			area.append("\n");
-			area.append("DR."+nom+" "+app+" "+apm+"  \n");
+			area.append("DR."+ usuarioPersona.toString() +"  \n");
 			area.append("\n");
 			 //Imprime la Factura en PDF
             ruta_destino = pdf.Colocar_Destino(ruta_destino);

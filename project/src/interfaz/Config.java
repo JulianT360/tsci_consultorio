@@ -1,50 +1,25 @@
 package interfaz;
 
+import conexion.*;
+import domain.entity.*;
+import domain.service.*;
+import util.*;
 
-import conexion.ConexionSql;
-import util.Constantes;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.*;
+import java.util.*;
+import java.util.logging.*;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static interfaz.InicioSesion.nom;
-import static interfaz.InicioSesion.app;
-import static interfaz.InicioSesion.apm;
-import static interfaz.InicioSesion.cedula;
-import static interfaz.InicioSesion.sexo;
-import static interfaz.InicioSesion.esp;
-import static interfaz.InicioSesion.catego;
-import static interfaz.InicioSesion.usr;
-import static interfaz.InicioSesion.password;
-
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
+import static interfaz.InicioSesion.*;
 
 public class Config extends JInternalFrame {
+
+	private PersonaService personaService;
+	private MedicoService medicoService;
+
 	private JTextField txtnum;
 	private JTextField txt_Nombre;
 	private JTextField txt_AP;
@@ -86,6 +61,10 @@ public class Config extends JInternalFrame {
 	 * Create the frame.
 	 */
 	public Config() {
+
+		this.personaService = new PersonaService();
+		this.medicoService = new MedicoService();
+
 		setIcon(Toolkit.getDefaultToolkit().getImage(Config.class.getResource("/img/estetoscopio.png")));
 		setTitle("CONFIGURACION                       "
 				+ "                                   "
@@ -129,7 +108,7 @@ public class Config extends JInternalFrame {
 		txt_Nombre.setHorizontalAlignment(SwingConstants.CENTER);
 		txt_Nombre.setBounds(290, 201, 220, 20);
 		txt_Nombre.setColumns(10);
-		txt_Nombre.setText(nom);
+		txt_Nombre.setText(Objects.isNull(usuarioPersona) ? null : usuarioPersona.getNombre());
 		panel.add(txt_Nombre);
 		
 		JLabel lbl_AP = new JLabel("Apellido Paterno");
@@ -152,7 +131,7 @@ public class Config extends JInternalFrame {
 		txt_AP.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		txt_AP.setColumns(10);
 		txt_AP.setBounds(290, 267, 220, 20);
-		txt_AP.setText(app);
+		txt_AP.setText(Objects.isNull(usuarioPersona) ? null : usuarioPersona.getApPaterno());
 		panel.add(txt_AP);
 		
 		JLabel lbl_AM = new JLabel("Apellido Materno");
@@ -175,7 +154,7 @@ public class Config extends JInternalFrame {
 		txt_AM.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		txt_AM.setColumns(10);
 		txt_AM.setBounds(290, 323, 220, 20);
-		txt_AM.setText(apm);
+		txt_AM.setText(Objects.isNull(usuarioPersona) ? null : usuarioPersona.getApMaterno());
 		panel.add(txt_AM);
 		
 		JLabel lblEspecialidad = new JLabel("Especialidad");
@@ -198,7 +177,7 @@ public class Config extends JInternalFrame {
 		txt_esp.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		txt_esp.setColumns(10);
 		txt_esp.setBounds(602, 135, 220, 20);
-		txt_esp.setText(esp);
+		txt_esp.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getEspecialidad());
 		panel.add(txt_esp);
 		
 		JLabel lbl_Cedula = new JLabel("Cedula");
@@ -219,7 +198,7 @@ public class Config extends JInternalFrame {
 		txt_cedula.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		txt_cedula.setColumns(10);
 		txt_cedula.setBounds(290, 135, 220, 20);
-		txt_cedula.setText(cedula);
+		txt_cedula.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getCedula());
 		panel.add(txt_cedula);
 		
 		JLabel lbl_Sexo = new JLabel("Sexo");
@@ -231,7 +210,7 @@ public class Config extends JInternalFrame {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] { "SELECCIONA","MASCULINO ", "FEMENINO"}));
 		comboBox.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		comboBox.setBounds(602, 188, 220, 20);
-		comboBox.setSelectedItem(sexo);
+		comboBox.setSelectedItem(Objects.isNull(usuarioPersona) ? null : usuarioPersona.getSexo());
 		panel.add(comboBox);
 		
 		JLabel lbl_Usuario = new JLabel("Usuario");
@@ -245,7 +224,7 @@ public class Config extends JInternalFrame {
 		txt_usuario.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		txt_usuario.setColumns(10);
 		txt_usuario.setBounds(602, 265, 220, 20);
-		txt_usuario.setText(usr);
+		txt_usuario.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getUsuario());
 		panel.add(txt_usuario);
 		
 		JLabel lbl_Contraseña = new JLabel("Contrase\u00F1a");
@@ -259,7 +238,7 @@ public class Config extends JInternalFrame {
 		contraseña.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		contraseña.setColumns(10);
 		contraseña.setBounds(602, 320, 220, 20);
-		contraseña.setText(password);
+		contraseña.setText(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getPassword());
 		panel.add(contraseña);
 		
 		JLabel lblCategoria = new JLabel("Categoria");
@@ -285,7 +264,7 @@ public class Config extends JInternalFrame {
 		comboBox_catego.setFont(new Font("Times New Roman", Font.PLAIN, 13));
 		comboBox_catego.setBounds(591, 60, 220, 20);
 		
-		comboBox_catego.setSelectedItem(catego);
+		comboBox_catego.setSelectedItem(Objects.isNull(usuarioMedico) ? null : usuarioMedico.getCategoria());
 		panel.add(comboBox_catego);
 
 		
@@ -380,7 +359,6 @@ public class Config extends JInternalFrame {
 //------------------------------------------
   
     public void limpiar() {
-	
 		 txt_Nombre.setText("");
 		 txt_AP.setText("");
 		 txt_AM.setText("");
@@ -392,57 +370,34 @@ public class Config extends JInternalFrame {
    } 
    
     public void guardar() {
-    	
-    	String nom,ap,am,esp,cedula,sexo,categoria,user,pass;
-		String sql;
-		
-		
-		nom=txt_Nombre.getText();
-		ap=txt_AP.getText();
-		am=txt_AM.getText();
-		cedula=txt_cedula.getText();
-		esp=txt_esp.getText();
-		user=txt_usuario.getText();
-		pass=contraseña.getText();
-		sexo=(String) comboBox.getSelectedItem();
-		categoria=(String) comboBox_catego.getSelectedItem();
-		
-     sql="INSERT INTO config (Nombre_config ,Ap_config ,A_Materno_config ,Sexo_config ,Cedula_config ,Esp_config ,"
-	      + "Categoria_config ,Usuario_config ,Contraseña_config)VALUES(?,?,?,?,?,?,?,?,?)";      
-	    
-	    try {
-	    	PreparedStatement pst=reg.prepareStatement(sql);
-	    	
-	    	pst.setString(1,nom);
-	    	pst.setString(2,ap);
-	    	pst.setString (3,am);
-	    	pst.setString(4,sexo);
-	    	pst.setString(5,cedula);
-	    	pst.setString(6,esp);
-	    	pst.setString(7,categoria);
-	    	pst.setString(8,user);
-	    	pst.setString(9,pass);
-            pst.executeUpdate();
 
-			JOptionPane.showMessageDialog(null, "REGISTRO CORRECTO");	
-			    	
-		    txt_Nombre.setText("");
-			txt_AP.setText("");
-			txt_AM.setText("");
-			txt_esp.setText("");
-		    txt_cedula.setText("");
-			txt_usuario.setText("");
-			contraseña.setText("");
-			comboBox.setSelectedIndex(0);
-			    	
-					
-			} catch (SQLException ex) {
-			     Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, ex);
-			}//fin del catch
+		// Se obtienen los datos de la persona
+		Persona persona = new Persona();
+		persona.setNombre(txt_Nombre.getText());
+		persona.setApPaterno(txt_AP.getText());
+		persona.setApMaterno(txt_AM.getText());
+		persona.setSexo((String) comboBox.getSelectedItem());
+		Long idPersona = personaService.savePersona(persona);
+
+		// Se obtienen los datos del medico
+		Medico medico = new Medico();
+		medico.setCedula(txt_cedula.getText());
+		medico.setEspecialidad(txt_esp.getText());
+		medico.setCategoria((String) comboBox_catego.getSelectedItem());
+		medico.setUsuario(txt_usuario.getText());
+		medico.setPassword(contraseña.getText());
+		medico.setIdPersona(idPersona);
+
+		Long idMedico = medicoService.saveMedico(medico);
+		medico.setId(idMedico);
+
+		JOptionPane.showMessageDialog(null, "REGISTRO CORRECTO");
+
+		this.limpiar();
     }
     
     public void editar() {
-    	
+    	/*
     	String nom,ap,am,esp,cedula,sexo,categoria,user,pass;
 		String sql;
 				
@@ -467,7 +422,9 @@ public class Config extends JInternalFrame {
 		} catch (Exception e) {
 			Logger.getLogger(Config.class.getName()).log(Level.SEVERE, null, e);
 		}
-   
+   		*/
+
+
     }
     
     public void eliminar() {

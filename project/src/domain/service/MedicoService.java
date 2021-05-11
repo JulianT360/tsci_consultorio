@@ -1,13 +1,10 @@
 package domain.service;
 
 import conexion.ConexionSql;
-import domain.entity.Medico;
-import domain.repository.MedicoRepository;
+import domain.entity.*;
+import domain.repository.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Servicio para entidad de medico.
@@ -35,6 +32,34 @@ public class MedicoService {
             throwables.printStackTrace();
         }
         return medico;
+    }
+
+    public Long saveMedico(Medico medico) {
+        Long idMedico = null;
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(MedicoRepository.saveMedico.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, medico.getCedula());
+            stmt.setString(2, medico.getEspecialidad());
+            stmt.setString(3, medico.getCategoria());
+            stmt.setString(4, medico.getUsuario());
+            stmt.setString(5, medico.getPassword());
+            stmt.setLong(6, medico.getIdPersona());
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de medico");
+            }
+
+            ResultSet generatedKey = stmt.getGeneratedKeys();
+            if(generatedKey.next()) {
+                idMedico = generatedKey.getLong(1);
+            } else {
+                throw new SQLException("Error al guardar la informacion de medico");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return idMedico;
     }
 
     /**

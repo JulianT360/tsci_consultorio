@@ -63,6 +63,34 @@ public class PersonaService {
         return persona;
     }
 
+    public Long savePersona(Persona persona) {
+        String[] returnId = { "BATCHID" };
+        Long idPersona = null;
+        try(Connection conn = conexion.conectar()) {
+            PreparedStatement stmt =
+                    conn.prepareStatement(PersonaRepository.savePersona.getQuery(), Statement.RETURN_GENERATED_KEYS);
+            stmt.setString(1, persona.getNombre());
+            stmt.setString(2, persona.getApPaterno());
+            stmt.setString(3, persona.getApMaterno());
+            stmt.setString(4, persona.getSexo());
+            //stmt.setInt(5, persona.getEdad());
+            int affectedRows = stmt.executeUpdate();
+            if(affectedRows == 0) {
+                throw new SQLException("Error al guardar la informacion de persona");
+            }
+
+            ResultSet generatedKey = stmt.getGeneratedKeys();
+            if(generatedKey.next()) {
+                idPersona = generatedKey.getLong(1);
+            } else {
+                throw new SQLException("Error al guardar la informacion de persona");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return idPersona;
+    }
+
     /**
      * Prepara los resultados de la consulta de personas
      * @param rs
