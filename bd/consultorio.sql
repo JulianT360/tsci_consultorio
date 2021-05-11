@@ -9,14 +9,14 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 CREATE TABLE `persona` (
-	`id` INTEGER NOT NULL,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
     `nombre` VARCHAR(255) NOT NULL,
     `ap_paterno` VARCHAR(255) NOT NULL,
     `ap_materno` VARCHAR(255),
-    `sexo` CHAR NOT NULL, 
-    `edad` INTEGER NOT NULL,
-    `telefono` VARCHAR(14),
-    `celular` VARCHAR(14),
+    `sexo` VARCHAR(50) NOT NULL, 
+    `edad` INTEGER NULL,
+    `telefono` VARCHAR(14) NULL,
+    `celular` VARCHAR(14) NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -26,7 +26,7 @@ CREATE TABLE `pais` (
 )  ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `estado` (
-	`id` INTEGER NOT NULL,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
     `estado` VARCHAR(255) NOT NULL,
     `paisId` INTEGER NOT NULL,
     PRIMARY KEY (id),
@@ -34,7 +34,7 @@ CREATE TABLE `estado` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `municipio` (
-	`id` INTEGER NOT NULL,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
     `municipio` VARCHAR(255) NOT NULL,
     `estadoId` INTEGER NOT NULL,
     PRIMARY KEY (id),
@@ -42,7 +42,7 @@ CREATE TABLE `municipio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `direccion` (
-	`id` INTEGER NOT NULL,
+	`id` INTEGER NOT NULL AUTO_INCREMENT,
     `personaId` INTEGER NOT NULL,
     `calle` VARCHAR(255) NOT NULL,
     `numInt` VARCHAR(12),
@@ -54,14 +54,14 @@ CREATE TABLE `direccion` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `paciente` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `personaId` INTEGER NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (personaId) REFERENCES persona(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `medico` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `cedula` INTEGER NOT NULL,
   `especialidad` varchar(255) NOT NULL,
   `categoria` varchar(255) NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE `medico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `antecedente_clinico` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `tipo` varchar(40) NOT NULL,
   `descripcion` varchar(255) NOT NULL,
   `pacienteId` INTEGER NOT NULL,
@@ -82,14 +82,14 @@ CREATE TABLE `antecedente_clinico` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `medicamento` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `nombre` varchar(255) NOT NULL,
   `cantidad` INTEGER NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `receta_medica` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `expediente` INTEGER NOT NULL,
   `fecha` datetime NOT NULL,
   `altura` INTEGER NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE `receta_medica` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `detalle_rm` (
-  `id` INTEGER NOT NULL,
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `receta_medicaId` INTEGER NOT NULL,
   `medicamentoId` INTEGER NOT NULL,
   `cantidad` INTEGER NOT NULL,
@@ -120,3 +120,17 @@ CREATE TABLE `detalle_rm` (
   FOREIGN KEY (receta_medicaId) REFERENCES receta_medica(id),
   FOREIGN KEY (medicamentoId) REFERENCES medicamento(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+USE consultorio;
+
+insert into persona (nombre, ap_paterno, ap_materno, sexo, edad, telefono, celular) 
+	values ('Julian', 'Tovar', 'Delgado', 'MASCULINO', 23, '8181400076', '8117140953');
+
+insert into persona (nombre, ap_paterno, ap_materno, sexo, edad, telefono, celular) 
+	values ('Juan', 'Tovar', 'Delgado', 'MASCULINO', 23, '8181400076', '8117140953');
+
+insert into Medico (cedula, especialidad, categoria, usuario, password, personaId)
+	values ('123456', 'MEDICO GRAL', 'DOCTOR', 'jtovar', 'test', 3);
+    
+insert into Medico (cedula, especialidad, categoria, usuario, password, personaId)
+	values ('123456', 'ADMINISTRADOR', 'ADMINISTRADOR', 'admin', 'admin', 4);
