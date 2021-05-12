@@ -42,4 +42,13 @@ public class Constantes {
 
     // Tipografia
     public static final String TIMES_NEW_ROMAN = "Times New Roman";
+
+    // Texto de pantalla medicamentos
+    public static final String LBL_NUMERO ="Numero";
+    public static final String LBL_MEDICAMENTO = "Medicamento";
+    public static final String LBL_CANTIDAD = "Cantidad";
+    public static final String LBL_MOSTRAR_TABLA = "Mostrar Tabla";
+    public static final String LBL_BUSCAR = "Buscar";
+    public static final String LBL_AGREGAR = "Agregar";
+    public static final String LBL_ELIMINAR = "Eliminar";
 }

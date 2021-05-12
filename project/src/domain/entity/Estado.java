@@ -16,5 +16,5 @@ import lombok.Setter;
 public class Estado {
     private Long id;
     private String estado;
-    private Long idPaisl;
+    private Long idPais;
 }
